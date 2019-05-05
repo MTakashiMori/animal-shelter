@@ -11,8 +11,10 @@
                         </v-text-field>
                     </v-flex>
                     <v-flex xs6>
-                        <v-select v-model="type"
+                        <v-select v-model="types_id"
                             :items="types"
+                            item-text="name"
+                            return-object
                             :rules="typeRules" 
                             label="Type" 
                             required>
@@ -30,8 +32,10 @@
                         </v-text-field>
                     </v-flex>
                     <v-flex xs6>
-                         <v-select v-model="shelter"
-                            :items="shelters" 
+                         <v-select v-model="shelters_id"
+                            :items="shelters"
+                            return-object
+                            item-text="name"
                             :rules="shelterRules" 
                             label="Shelter" 
                             required>
@@ -58,7 +62,7 @@
         </v-layout>
     </div>
 </template>
-
+//TODO salvar e corrigir erros
 <script>
 export default {
     name: 'AnimalPersist',
@@ -68,13 +72,8 @@ export default {
             nameRules: [
                 v => !!v || 'Name of animal is required'
             ],
-            types: [
-                'Dog',
-                'Cat',
-                'Horse',
-                'Snake'
-            ],
-            type: '',
+            types_id: '',
+            types: [],
             typeRules: [
                 v => !!v || 'Type of animal is required'
             ],
@@ -82,20 +81,17 @@ export default {
             ageRules: [
                 v => !!v || 'Age of animal is required'
             ],
-            shelters: [
-                'St Francis',
-                'Heaven of Pets',
-                'Pet Palace',
-                'Home Pet Home'
-            ],
-            shelter: '',
+            shelters: [],
+            shelters_id: '',
             shelterRules: [
                 v => !!v || 'Shelter of animal is required'
             ],
             description: '',
             descriptionRules: [
                 v => !!v || 'Description of animal is required'
-            ]
+            ],
+            status_id: '',
+            status: []
         }
     },
     methods: {
@@ -103,7 +99,40 @@ export default {
             if(!this.$refs.form.validate()){
                 return;
             }
+
+            this.status_id = this.status.find( (res) => {
+                return res.name === "Ownerless"
+            });
+
+            this.$axios.post((process.env.VUE_APP_PATH + 'animal'), {
+                'name': this.name,
+                'types_id': this.types_id.id,
+                'age': this.age,
+                'shelters_id': this.shelters_id.id,  
+                'description': this.description,
+                'status_id': this.status_id.id
+            })
+            .then(function (response){
+                //TODO return to list page
+                //TODO make loading
+            })
+            .catch(function(error){
+                //TODO make notifications
+            });
+            
+            this.$router.push({path: '/animal'})
         }
-    }
+    },
+    mounted: function () {
+            this.$axios.get((process.env.VUE_APP_PATH + 'type'))
+            .then( response => (this.types = response.data.data));
+
+            this.$axios.get((process.env.VUE_APP_PATH + 'shelter'))
+            .then( response => (this.shelters = response.data.data));
+
+            this.$axios.get((process.env.VUE_APP_PATH + 'status'))
+            .then( response => (this.status = response.data.data));
+        
+    },
 }
 </script>

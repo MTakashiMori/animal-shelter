@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div>     
         <v-form @submit.prevent="submit" ref="form">
             <v-container>
                 <v-layout>
@@ -16,9 +16,8 @@
                          <v-text-field v-model="cnpj" 
                             :rules="cnpjRules" 
                             label="CNPJ" 
-                            type="number"
                             min="0"
-                            :mask="['##.###.###/####-##']"
+                            mask="##.###.###/####-##"
                             required>
                         </v-text-field>
                     </v-flex>
@@ -55,7 +54,8 @@ export default {
             ],
             cnpj: '',
             cnpjRules: [
-                v => !!v || 'CNPJ of shelter is required'
+                v => !!v || 'CNPJ of shelter is required',
+                v => v.length >= 14 || 'CNPJ of shelter is invalid'
             ],
             description: '',
             descriptionRules: [
@@ -68,6 +68,19 @@ export default {
             if(!this.$refs.form.validate()){
                 return;
             }
+
+            this.$axios.post((process.env.VUE_APP_PATH + 'shelter'), {
+                'name': this.name,
+                'description': this.description,
+                'cnpj': this.cnpj
+            })
+            .then( res => {
+                this.$router.go(-1);
+            })
+            .catch(function(error){
+                //TODO make notifications
+            });
+
         }
     }
 }
