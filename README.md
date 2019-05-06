@@ -1,30 +1,18 @@
-# animal-shelter
+# Animal Shelter
+
+This is a project for a animal shelter, you can add a shelter, add animals to her and adopt his animals.
+
+# Introduction
+
+this is a simple project using Vue and Vuetify. This is the front-end, to acess the api <a href="https://github.com/MTakashiMori/animal-shelter-api">back-end</a>
+
 
 ## Project setup
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### Compiles run
 ```
 yarn run serve
 ```
-
-### Compiles and minifies for production
-```
-yarn run build
-```
-
-### Run your tests
-```
-yarn run test
-```
-
-### Lints and fixes files
-```
-yarn run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-# animal-shelter
