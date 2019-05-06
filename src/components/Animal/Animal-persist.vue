@@ -60,12 +60,20 @@
             <v-btn  color="error" @click="$router.go(-1)"> Cancel</v-btn>
             <v-btn  color="success" @click="submit"> Save</v-btn>
         </v-layout>
+
+        <Notify :snackMessage="snackMessage" :snackbar="snackbar" @close="close"></Notify>
+
     </div>
 </template>
-//TODO salvar e corrigir erros
 <script>
+
+import Notify from '@/components/layouts/Notify.vue';
+
 export default {
     name: 'AnimalPersist',
+    components: {
+        Notify
+    },
     data() {
         return {
             name: '',
@@ -91,7 +99,9 @@ export default {
                 v => !!v || 'Description of animal is required'
             ],
             status_id: '',
-            status: []
+            status: [],
+            snackbar: false,
+            snackMessage: ""
         }
     },
     methods: {
@@ -112,15 +122,20 @@ export default {
                 'description': this.description,
                 'status_id': this.status_id.id
             })
-            .then(function (response){
-                //TODO return to list page
-                //TODO make loading
+            .then(res => {
+                this.notify("Animal saved with sucess");
             })
-            .catch(function(error){
-                //TODO make notifications
+            .catch(res => {
+                this.notify("Ops, an error has ocurred");
             });
             
-            this.$router.push({path: '/animal'})
+        },
+        notify(message) {
+            this.snackMessage = message;
+            this.snackbar = true;
+        },
+        close() {
+            this.snackbar = false;
         }
     },
     mounted: function () {

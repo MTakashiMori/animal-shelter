@@ -40,12 +40,17 @@
             <v-btn  color="error" @click="$router.go(-1)"> Cancel</v-btn>
             <v-btn  color="success" @click="submit"> Save</v-btn>
         </v-layout>
+        <Notify :snackMessage="snackMessage" :snackbar="snackbar" @close="close"></Notify>
     </div>
 </template>
 
 <script>
+import Notify from '@/components/layouts/Notify.vue';
 export default {
     name: 'ShelterPersist',
+    components: {
+        Notify
+    },
     data() {
         return {
             name: '',
@@ -60,7 +65,9 @@ export default {
             description: '',
             descriptionRules: [
                 v => !!v || 'Description of shelter is required'
-            ]
+            ],
+            snackbar: false,
+            snackMessage: ""
         }
     },
     methods: {
@@ -75,12 +82,20 @@ export default {
                 'cnpj': this.cnpj
             })
             .then( res => {
-                this.$router.go(-1);
+                this.notify('Shelter saved with success');
             })
             .catch(function(error){
+                this.notify('Ops, an error has ocurred');
                 //TODO make notifications
             });
 
+        },
+        notify(message) {
+            this.snackMessage = message;
+            this.snackbar = true;
+        },
+        close() {
+            this.snackbar = false;
         }
     }
 }

@@ -37,13 +37,18 @@
                 return
             </v-btn>   
         </v-layout>
-
+        <Notify :snackMessage="snackMessage" :snackbar="snackbar" 
+            @close="close"></Notify>
     </div>
 </template>
 
 <script>
+import Notify from '@/components/layouts/Notify.vue'
 export default {
     name: 'AnimalList',
+    components: {
+        Notify
+    },
     data() {
         return {
             animals: [],
@@ -54,7 +59,9 @@ export default {
                 {text: 'Shelter', value: 'shelter.name'},
                 {text: 'Description', value: 'description'},
                 {text: ''},
-            ]
+            ],
+            snackbar: false,
+            snackMessage: ""
         }
     },
     methods: {
@@ -67,12 +74,11 @@ export default {
             })
             .then( (res) => {
                 this.updateData();
+                this.notify("Thank's  for adopt me human =^.^= ");
             })
             .catch(function(error){
-                //TODO make notifications
+                this.notify("Oops, somthing went wrong, please try again");
             });
-            
-            this.$router.push({path: '/animal'})
         },
         updateData() {
             this.$axios.get((process.env.VUE_APP_PATH + 'animal'), {
@@ -81,6 +87,13 @@ export default {
              }    
          })
             .then( response => (this.animals = response.data.data));
+        },
+        notify(message) {
+            this.snackMessage = message;
+            this.snackbar = true;
+        },
+        close() {
+            this.snackbar = false;
         }
     },
     mounted: function() {

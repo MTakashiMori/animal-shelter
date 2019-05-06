@@ -3,7 +3,8 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-import Home from '@/components/Home.vue'
+import Home           from '@/components/Home.vue'
+import About           from '@/components/About.vue'
 import Animal         from '@/components/Animal/Animal.vue'
 import AnimalList     from '@/components/Animal/Animal-list.vue'
 import AnimalPersist  from '@/components/Animal/Animal-persist.vue'
@@ -18,6 +19,11 @@ export default new Router({
       path: '/',
       name: 'Home',
       component: Home
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: About
     },
     {
       path: '/animal',
